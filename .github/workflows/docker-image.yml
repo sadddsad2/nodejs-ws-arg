@@ -23,6 +23,7 @@ jobs:
     - name: Check URL status
       id: url_check
       run: |
+          pip install requests
           python -c "
           import requests
           import sys
