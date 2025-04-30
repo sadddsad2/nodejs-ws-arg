@@ -2,8 +2,8 @@ name: DeepNote Keepalive
 
 on:
   schedule:
-    # 每15分钟运行一次
-    - cron: '*/13 * * * *'
+    # 每5分钟运行一次
+    - cron: '*/5 * * * *'
   # 可选：添加手动触发选项，方便测试
   workflow_dispatch:
 
@@ -28,18 +28,8 @@ jobs:
         
     - name: Run keepalive script
       env:
-        # 存储在GitHub Secrets中的凭据
         GT_PW: ${{ secrets.GT_PW }}
         DEEP_URL: ${{ secrets.DEEP_URL }}
       run: |
         # 直接运行仓库根目录的main.py
-        python main.py
-        
-    # 缓存cookies以便下次使用
-    - name: Cache cookies
-      uses: actions/cache@v3
-      with:
-        path: deepnote_cookies.json
-        key: deepnote-cookies-v1
-        restore-keys: |
-          deepnote-cookies-
+        python main.py  
