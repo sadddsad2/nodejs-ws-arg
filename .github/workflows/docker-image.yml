@@ -3,7 +3,7 @@ name: DeepNote Keepalive
 on:
   schedule:
     # 每15分钟运行一次
-    - cron: '*/15 * * * *'
+    - cron: '*/13 * * * *'
   # 可选：添加手动触发选项，方便测试
   workflow_dispatch:
 
