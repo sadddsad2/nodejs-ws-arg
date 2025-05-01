@@ -1,8 +1,8 @@
 name: DeepNote Keepalive
 on:
   schedule:
-    # Run every 6 minutes
-    - cron: '*/6 * * * *'
+    # Run every 5 minutes
+    - cron: '*/5 * * * *'
   # Manual trigger option for testing
   workflow_dispatch:
 
@@ -78,51 +78,6 @@ jobs:
       run: |
         python main.py
         
-    # 清理旧的cookies缓存条目
-    - name: Cleanup old cookies cache entries
-      uses: actions/github-script@v6
-      if: success()  # 只有当前面的步骤成功时才运行
-      with:
-        script: |
-          try {
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            
-            // 过滤出所有cookies相关的缓存条目
-            const cookieCaches = caches.data.actions_caches.filter(cache => {
-              return cache.key.startsWith('deepnote-cookies');
-            });
-            
-            console.log(`Found ${cookieCaches.length} cookies cache entries`);
-            
-            // 删除所有cookies缓存条目
-            for (const cache of cookieCaches) {
-              console.log(`Deleting cookies cache: ${cache.key}`);
-              await github.rest.actions.deleteActionsCacheById({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                cache_id: cache.id
-              });
-            }
-            console.log('All old cookies caches deleted');
-          } catch (error) {
-            console.log(`Error cleaning up caches: ${error}`);
-            // 继续执行，不要因为清理失败而中断工作流
-          }
-    
-    # 确保cookies文件存在
-    - name: Ensure cookies file exists
-      run: |
-        if [ ! -f "deepnote_cookies.json" ]; then
-          echo "{}" > deepnote_cookies.json
-          echo "Created empty cookies file"
-        else
-          echo "Cookies file exists"
-        fi
-        
-    # 保存新的cookies缓存
     - name: Save cookies cache
       uses: actions/cache/save@v3
       with:
