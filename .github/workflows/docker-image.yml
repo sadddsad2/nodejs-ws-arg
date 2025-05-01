@@ -10,11 +10,11 @@ on:
 jobs:
   keepalive:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -25,11 +25,34 @@ jobs:
         python -m pip install --upgrade pip
         pip install playwright
         python -m playwright install firefox
-        
+
     - name: Run keepalive script
       env:
         GT_PW: ${{ secrets.GT_PW }}
         DEEP_URL: ${{ secrets.DEEP_URL }}
       run: |
-        # 直接运行main.py
-        python main.py  
+        # 直接运行仓库根目录的main.py
+        python main.py
+
+  # 新增的清理日志 Job
+  cleanup:
+    # 确保在 keepalive Job 完成后再运行，无论 keepalive 成功还是失败
+    needs: keepalive
+    # 确保 cleanup Job 总是运行，即使 keepalive Job 失败
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: # 需要权限来删除工作流运行记录
+      actions: write
+
+    steps:
+    - name: Delete old workflow runs
+      uses: peter-murray/workflow-run-cleanup-action@v2
+      with:
+        # GitHub token，默认的 GITHUB_TOKEN 通常有足够的权限
+        token: ${{ secrets.GITHUB_TOKEN }}
+        # 要清理的工作流名称，这里是当前工作流的名称
+        workflow: ${{ github.workflow }}
+        # 要保留的最新运行次数
+        retain_runs: 10
+        # 可选：只清理特定分支的运行记录，留空则清理所有分支
+        # branch: main # 如果你的 keepalive 只在 main 分支跑，可以加上
