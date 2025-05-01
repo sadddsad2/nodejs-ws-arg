@@ -31,5 +31,5 @@ jobs:
         GT_PW: ${{ secrets.GT_PW }}
         DEEP_URL: ${{ secrets.DEEP_URL }}
       run: |
-        # 直接运行仓库根目录的main.py
+        # 直接运行main.py
         python main.py  
