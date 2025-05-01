@@ -171,9 +171,9 @@ def login_with_cookie_or_password(page, context, username, password):
             print("登录成功，导航到工作区")
             login_successful = True
         else:
-            print("登录可能失败，URL未变更为工作区")
+            print("登录可能失败，未导航到工作区")
     except TimeoutError:
-        print("登录可能失败，URL未变更为工作区")
+        print("登录可能失败，未导航到工作区")
     
     return login_successful
 
@@ -213,7 +213,7 @@ def is_app_running(page):
         return is_running
         
     except Exception as e:
-        print(f"检查应用运行状态时出错")
+        print(f"未找到'Running',应用状态检查：未运行")
         return False
 
 def try_click_run_button(page):
@@ -308,10 +308,12 @@ def run(playwright: Playwright) -> None:
                         page.goto(url)
                         page.wait_for_load_state("domcontentloaded", timeout=30000)
                         print(f"已导航到指定的deepnode保活链接")
+                        time.sleep(5)
                     except TimeoutError:
                         print(f"导航到deepnode保活链接时超时，但继续执行")
                 
                 # 检查应用是否正在运行
+                
                 app_running = is_app_running(page)
                 
                 # 如果应用未运行，尝试点击"Run"按钮
@@ -319,7 +321,8 @@ def run(playwright: Playwright) -> None:
                     click_success = try_click_run_button(page)
                     
                     # 检查应用是否正在运行
-                    time.sleep(20)
+                    print(f"等待30s，再次检查是否运行")
+                    time.sleep(30)
                     app_running = is_app_running(page)
                 
                 if app_running:
