@@ -13,12 +13,28 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
-    - name: Check WEB_URL Status
+
+    - name: Check WEB_URLs Status
       id: check_url_status
       run: |
-        HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL }}")
-        echo "status=$HTTP_STATUS" >> $GITHUB_OUTPUT
-        echo "WEB_URL status code: $HTTP_STATUS"
+        # 检查第一个URL
+        HTTP_STATUS1=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL }}")
+        echo "WEB_URL status code: $HTTP_STATUS1"
+    
+        # 检查第二个URL
+        HTTP_STATUS2=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL2 }}")
+        echo "WEB_URL2 status code: $HTTP_STATUS2"
+    
+        # 判断结果
+        if [ "$HTTP_STATUS1" = "200" ] && [ "$HTTP_STATUS2" = "200" ]; then
+        FINAL_STATUS="200"
+        else
+        FINAL_STATUS="400"
+        fi
+    
+        # 输出结果到GitHub Actions
+        echo "status=$FINAL_STATUS" >> $GITHUB_OUTPUT
+        echo "Final status code: $FINAL_STATUS"
         
     - name: Restore cookies cache
       if: steps.check_url_status.outputs.status != '200'
