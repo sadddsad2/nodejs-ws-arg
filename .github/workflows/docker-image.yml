@@ -49,12 +49,10 @@ jobs:
       id: cache-cookies-restore
       uses: actions/cache/restore@v3
       with:
-        path: deepnote_cookies.json # This ensures it overwrites the local file if cache is found
-        # The primary 'key' is less important here as we rely on restore-keys for "latest".
-        # Using a generic key here or even one that's unlikely to match forces reliance on restore-keys.
+        path: deepnote-cookies.json
         key: deepnote-cookies-restore-attempt-${{ runner.os }}
         restore-keys: |
-          deepnote-cookies- # Cache action will find the newest cache starting with this prefix
+          deepnote-cookies-
           
     - name: Set up Python
       if: steps.check_url_status.outputs.status != '200'
@@ -120,15 +118,15 @@ jobs:
         python main2.py
         
     - name: Get current timestamp for cookie cache key
-      if: steps.check_url_status.outputs.status != '200' # Only if scripts ran
+      if: steps.check_url_status.outputs.status != '200'
       id: timestamp_generator
       run: echo "CACHE_TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-
+      
     - name: Save cookies cache with timestamp
-      if: steps.check_url_status.outputs.status != '200' # Only if scripts ran and potentially updated cookies
+      if: steps.check_url_status.outputs.status != '200'
       uses: actions/cache/save@v3
       with:
-        path: deepnote_cookies.json
+        path: deepnote-cookies.json
         key: deepnote-cookies-${{ steps.timestamp_generator.outputs.CACHE_TIMESTAMP }}
         
     - name: Save pip cache
