@@ -22,11 +22,11 @@ jobs:
       id: check_url_status
       run: |
         # 检查第一个URL
-        HTTP_STATUS1=$(curl -s -o /dev/null -w "%{http_code}" -L "https://www.cc.comff" || echo "400")
+        HTTP_STATUS1=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL }}" || echo "400")
         echo "WEB_URL status code: $HTTP_STATUS1"
     
         # 检查第二个URL
-        HTTP_STATUS2=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL2 }}")
+        HTTP_STATUS2=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL2 }}" || echo "400")
         echo "WEB_URL2 status code: $HTTP_STATUS2"
     
         # 判断结果
