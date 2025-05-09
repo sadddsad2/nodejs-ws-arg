@@ -22,7 +22,7 @@ jobs:
       id: check_url_status
       run: |
         # 检查第一个URL
-        HTTP_STATUS1=$(curl -s -o /dev/null -w "%{http_code}" -L "${{ secrets.WEB_URL }}" || echo "400")
+        HTTP_STATUS1=$(curl -s -o /dev/null -w "%{http_code}" -L "http://1233.ccccccccc" || echo "400")
         echo "WEB_URL status code: $HTTP_STATUS1"
     
         # 检查第二个URL
@@ -116,6 +116,7 @@ jobs:
         DEEP_URL2: ${{ secrets.DEEP_URL2 }}
       run: |
         python main.py
+        sleep 5
         python main2.py
         
     - name: Get current timestamp for cookie cache key
