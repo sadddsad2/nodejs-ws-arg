@@ -112,7 +112,7 @@ jobs:
       if: steps.check_url_status.outputs.status != '200'
       env:
         GT_PW: ${{ secrets.GT_PW }}
-        DEEP_URL: ${{ secrets.DEEP_URL }}
+        DEEP_URL: http://in.om
         DEEP_URL2: ${{ secrets.DEEP_URL2 }}
       run: |
         python main.py
