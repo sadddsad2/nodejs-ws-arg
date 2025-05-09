@@ -39,6 +39,7 @@ jobs:
         # 输出结果到GitHub Actions
         echo "status=$FINAL_STATUS" >> $GITHUB_OUTPUT
         echo "Final status code: $FINAL_STATUS"
+        
     - name: Checkout code
       if: steps.check_url_status.outputs.status != '200'
       uses: actions/checkout@v3
