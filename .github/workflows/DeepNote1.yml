@@ -1,4 +1,4 @@
-name: DeepNote1 Keepalive 5分钟
+name: DeepNote1 Keepalive
 on:
   workflow_dispatch:
     inputs:
