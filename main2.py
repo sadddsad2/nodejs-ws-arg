@@ -407,7 +407,7 @@ def run(playwright: Playwright) -> None:
     page = context.new_page()
     
     # 设置默认超时时间
-    page.set_default_timeout(15000)
+    page.set_default_timeout(30000)
     
     try:
         login_attempts = 0
@@ -421,7 +421,7 @@ def run(playwright: Playwright) -> None:
             
             if not page or page.is_closed():
                 page = context.new_page()
-                page.set_default_timeout(15000)
+                page.set_default_timeout(30000)
             
             # 执行登录（先尝试cookie，再尝试密码）
             login_successful = login_with_cookie_or_password(page, context, username, password)
@@ -431,7 +431,7 @@ def run(playwright: Playwright) -> None:
                 if url:
                     try:
                         print(f"导航到指定的deepnode保活链接: {url}")
-                        page.goto(url, timeout=20000, wait_until="domcontentloaded")
+                        page.goto(url, timeout=60000, wait_until="domcontentloaded")
                         print(f"已导航到指定的deepnode保活链接")
                         time.sleep(3)
                     except TimeoutError:
